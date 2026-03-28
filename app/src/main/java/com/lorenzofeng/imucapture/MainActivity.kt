@@ -149,11 +149,19 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     }
 
     @Suppress("DEPRECATION")
+    private fun getDisplayRotation(): Int {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            display?.rotation ?: android.view.Surface.ROTATION_0
+        } else {
+            windowManager.defaultDisplay.rotation
+        }
+    }
+
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         viewportWidth = width
         viewportHeight = height
         GLES20.glViewport(0, 0, width, height)
-        session?.setDisplayGeometry(windowManager.defaultDisplay.rotation, width, height)
+        session?.setDisplayGeometry(getDisplayRotation(), width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -234,6 +242,11 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         GLES20.glAttachShader(quadProgram, vertexShader)
         GLES20.glAttachShader(quadProgram, fragmentShader)
         GLES20.glLinkProgram(quadProgram)
+        val linkStatus = IntArray(1)
+        GLES20.glGetProgramiv(quadProgram, GLES20.GL_LINK_STATUS, linkStatus, 0)
+        if (linkStatus[0] == 0) {
+            Log.e(TAG, "Program link error: ${GLES20.glGetProgramInfoLog(quadProgram)}")
+        }
 
         quadPositionAttrib = GLES20.glGetAttribLocation(quadProgram, "a_Position")
         quadTexCoordAttrib = GLES20.glGetAttribLocation(quadProgram, "a_TexCoord")
@@ -294,6 +307,13 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         val shader = GLES20.glCreateShader(type)
         GLES20.glShaderSource(shader, source)
         GLES20.glCompileShader(shader)
+        val status = IntArray(1)
+        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, status, 0)
+        if (status[0] == 0) {
+            Log.e(TAG, "Shader compile error: ${GLES20.glGetShaderInfoLog(shader)}")
+            GLES20.glDeleteShader(shader)
+            return 0
+        }
         return shader
     }
 
