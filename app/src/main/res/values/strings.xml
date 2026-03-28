@@ -3,5 +3,6 @@
     <string name="hold_to_record">按住记录坐标</string>
     <string name="recording">记录中…</string>
     <string name="clear_log">清除日志</string>
-    <string name="log_hint">按住按钮开始记录手机在空间中的坐标…</string>
+    <string name="log_hint">按住按钮开始记录手机在空间中的坐标（ARCore）…</string>
+    <string name="camera_permission_needed">需要相机权限才能使用 ARCore</string>
 </resources>

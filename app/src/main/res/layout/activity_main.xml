@@ -1,41 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnRecord"
+    <android.opengl.GLSurfaceView
+        android:id="@+id/glSurfaceView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hold_to_record"
-        android:textSize="18sp" />
+        android:layout_height="match_parent" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="16dp"
-        android:background="#1A000000">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvLog"
+        <Button
+            android:id="@+id/btnRecord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:padding="8dp"
-            android:text="@string/log_hint"
-            android:textSize="12sp" />
-    </ScrollView>
+            android:text="@string/hold_to_record"
+            android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/btnClear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="8dp"
-        android:text="@string/clear_log" />
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:background="#80000000">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:padding="8dp"
+                android:text="@string/log_hint"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:text="@string/clear_log" />
+
+    </LinearLayout>
+
+</FrameLayout>
