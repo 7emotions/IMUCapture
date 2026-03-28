@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     companion object {
         private const val TAG = "IMUCapture"
+        private const val UI_UPDATE_INTERVAL_MS = 100L
+        private const val MAX_LOG_LENGTH = 50_000
     }
 
     private lateinit var sensorManager: SensorManager
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var pz = 0.0
 
     private var lastTimestamp: Long = 0
+    private var lastUiUpdateTime: Long = 0
 
     private val logBuilder = StringBuilder()
 
@@ -138,7 +141,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         )
 
         Log.d(TAG, msg)
-        appendLog(msg)
+        logBuilder.appendLine(msg)
+        throttledUpdateUi()
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -147,6 +151,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun appendLog(message: String) {
         logBuilder.appendLine(message)
+        updateUi()
+    }
+
+    private fun throttledUpdateUi() {
+        val now = System.currentTimeMillis()
+        if (now - lastUiUpdateTime < UI_UPDATE_INTERVAL_MS) return
+        lastUiUpdateTime = now
+        updateUi()
+    }
+
+    private fun updateUi() {
+        if (logBuilder.length > MAX_LOG_LENGTH) {
+            logBuilder.delete(0, logBuilder.length - MAX_LOG_LENGTH)
+        }
         tvLog.text = logBuilder.toString()
         scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
